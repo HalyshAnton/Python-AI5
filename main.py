@@ -65,3 +65,5 @@ dog.print_info()
 # line.replace(',', ' ')
 #
 # def replace(self, old, new):
+
+self.items.append("Стіл")
