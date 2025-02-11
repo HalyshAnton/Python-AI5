@@ -22,6 +22,10 @@ class Dog:
         # вивід інформації про песика
         print(self.name, self.age, self.weight)
 
+    def rename(self, new_name):
+        # зміна імені песика
+        self.name = new_name
+
 
 # конкретні песики
 # dog1 = Dog()  # об'єкт клас Dog
@@ -42,13 +46,22 @@ class Dog:
 # dog1.make_sound()
 
 
-dog1 = Dog(name='Lev', age=3, weight=7)
-print(dog1.name)
+# dog1 = Dog(name='Lev', age=3, weight=7)
+# print(dog1.name)
+#
+# dog2 = Dog(name='Carl', age=5, weight=10)
+# print(dog2.name)
+#
+#
+# dog1.print_info()  # self = dog1
+# dog2.print_info()  # self = dog2
 
-dog2 = Dog(name='Carl', age=5, weight=10)
-print(dog2.name)
+dog = Dog('Carl', 5, 10)
+dog.print_info()
 
+dog.rename("Петро")  # self = dog,  new_name = "Петро"
+dog.print_info()
 
-dog1.print_info()  # self = dog1
-dog2.print_info()  # self = dog2
-
+# line.replace(',', ' ')
+#
+# def replace(self, old, new):
