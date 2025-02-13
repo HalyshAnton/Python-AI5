@@ -42,6 +42,9 @@ class Project:
             for task in self.tasks:
                 print(f'   - {task}')
 
+    def add_task(self, task):
+        self.tasks.append(task)
+
 
 project = Project(name='Ігрушка',
                   budget=10_000,
