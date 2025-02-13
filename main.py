@@ -41,9 +41,12 @@ class Project:
             print('Задачі що залишились:')
             for task in self.tasks:
                 print(f'   - {task}')
+        print()
+        print()
 
     def add_task(self, task):
         self.tasks.append(task)
+
 
 
 project = Project(name='Ігрушка',
@@ -53,7 +56,9 @@ project = Project(name='Ігрушка',
 
 project.display_info()
 
+project.add_task('Вибрати ПЗ для гри')
 
+project.display_info()
 
 
 
