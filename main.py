@@ -57,6 +57,27 @@ class Project:
 
         self.tasks += subtasks
 
+    def do_task(self, task, duration, price):
+        # чи є така задача
+        if task not in self.tasks:
+            print(f'Немає такої задачі {task}')
+            return
+
+        # чи вистачає бюджету
+        free_money = self.budget - self.expenses
+        if price > free_money:
+            print("Недостатньо коштів")
+            return
+
+        # виконуємо задачу
+        self.expenses += price
+        self.tasks.remove(task)
+        self.spent_time += duration
+
+        # чи завершений проект
+        if len(self.tasks) == 0:
+            self.is_finished = True
+
 
 
 project = Project(name='Ігрушка',
@@ -79,6 +100,10 @@ project.divide_task('Придумати загальну ідею',
                      'Придумати сюжет',
                      'Прописати персонажів']
                     )
+
+project.display_info()
+
+project.do_task('Придумати сюжет', 6, 1000)
 
 project.display_info()
 
