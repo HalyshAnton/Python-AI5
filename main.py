@@ -78,6 +78,9 @@ class Project:
         if len(self.tasks) == 0:
             self.is_finished = True
 
+    def update_budget(self, amount):
+        self.budget += amount
+
 
 
 project = Project(name='Ігрушка',
@@ -104,6 +107,13 @@ project.divide_task('Придумати загальну ідею',
 project.display_info()
 
 project.do_task('Придумати сюжет', 6, 1000)
+project.do_task('Обрати між 2D та 3D', 3, 200)
+project.do_task('Прописати персонажів', 15, 6000)
+
+project.update_budget(2500)
+
+project.do_task('Знайти інвесторів', 10, 3000)
+project.do_task('Вибрати ПЗ для гри', 5, 1800)
 
 project.display_info()
 
