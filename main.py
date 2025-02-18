@@ -47,6 +47,20 @@ class Circle:
               f"периметр: {perim} ")
 
 
+class Triangle:
+    def __init__(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def get_perimeter(self):
+        return self.a + self.b + self.c
+
+    def display_info(self):
+        perim = self.get_perimeter()
+        print(f"Трикутник")
+        print(f"сторони: {self.a, self.b, self.c} "
+              f"периметр: {perim} ")
 
 
 
