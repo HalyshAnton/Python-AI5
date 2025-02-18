@@ -59,7 +59,7 @@ class Triangle:
     def display_info(self):
         perim = self.get_perimeter()
         print(f"Трикутник")
-        print(f"сторони: {self.a, self.b, self.c} "
+        print(f"сторони: {self.a}, {self.b}, {self.c} "
               f"периметр: {perim} ")
 
 
@@ -86,3 +86,10 @@ def create_figure():
 
 
 
+# використання
+figure = create_figure()
+
+print(type(figure))
+
+if figure is not None:
+    figure.display_info()
