@@ -12,10 +12,12 @@
 # тип фігури та потрібні атрибути і повертає об’єкт.
 # Створіть декілька фігур, добавте їх у список та для кожної
 # викличте відповідні методи.
+
 from math import pi
 #import math
 
 
+# поліморфізм
 class Rectangle:
     def __init__(self, width, height):
         self.width = width
@@ -87,9 +89,22 @@ def create_figure():
 
 
 # використання
-figure = create_figure()
+# figure = create_figure()
+#
+# print(type(figure))
+#
+# if figure is not None:
+#     figure.display_info()
 
-print(type(figure))
 
-if figure is not None:
+figures = []
+for _ in range(3):
+    figure = create_figure()
+
+    if figure is not None:
+        figures.append(figure)
+
+print(figures)
+
+for figure in figures:
     figure.display_info()
