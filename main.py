@@ -1,126 +1,118 @@
-# # наслідування
+# OOP
+
+# def move(self, destination, distance):
+#     leaving_passengers = []
+#     left_passengers = []
 #
-# # переведення числа в діапазон [0, 100]
+#     for p in self.passengers:
+#         if p.destination == destination:
+#             leaving_passengers.append(p)
+#         else:
+#             left_passengers.append(p)
 #
-# value = -10
+#     self.passengers = left_passengers
 #
-# # варіант через if
-# # if value > 100:
-# #     value = 100
-# # elif value < 0:
-# #     value = 0
+# a + b  # __add__
+# a > b  # __gt__
+# num in nums  # __contains__
+
+# структури даних
+
+# нотація O
+
+# n = 10
+# a = 2 + 3  # швидкість не залежить від n. O(1)
 #
-# # через min max
 #
-# value = -10
-# new_value = min(value, 100)
-# new_value = max(new_value, 0)
+# for i in range(n):  # кількість операцій залежить від n. O(n)
+#     print(i)
 #
-# new_value = max(0, min(100, value))  # clip
 #
-# print(new_value)
-
-# використання методів батьківського класу
-from abc import ABC, abstractmethod
-
-class Animal(ABC):  # абстрактний клас(не можна створити об'єкт)
-    @abstractmethod
-    def __init__(self, name, age):
-        self._check_name(name)
-        self._check_age(age)
-        self.name = name
-        self.age = age
-
-    def _check_name(self, name):
-        # перевірка чи тип даних str
-        if not isinstance(name, str):
-            raise ValueError(f"Ім'я має бути рядком, отримано тип {type(name)}")
-
-        # лише літери та символи ' ' '-'
-        for sym in name:
-            if not(sym.isalpha() or sym in ' -'):
-                raise ValueError("Ім'я має складатися лише з літер та ' -'")
-
-    def _check_age(self, age):
-        # перевірка чи тип даних int float
-        if not isinstance(age, (int, float)):
-            raise ValueError(f"Вік має бути числом, отримано тип {type(age)}")
-
-        if age <= 0 or age >= 20:
-            raise ValueError(f"Вік має бути в діапазоні [0, 20]")
-
-
-    def info(self):
-        print(f"Ім'я: {self.name}, {self.age} років")
-
-
-class Cat(Animal): # name, age, is_vaccinated
-    def __init__(self, name, age, is_vaccinated=True):
-        super().__init__(name, age)
-        self.is_vaccinated = is_vaccinated
-
-    def catch_mouse(self):
-        print("Ловить мишу")
-
-    def info(self):  # додатково писало що це кіт
-        print("Кіт")
-        # super() # super -- батьківський клас
-        super().info() # info з класу Animal
-
-        if self.is_vaccinated:
-            print("Вакцинований")
-        else:
-            print("Потрібно вакцинувати")
-
-
-# cat1 = Cat('Tom', 5)
-# cat1.info()
-# #cat1.catch_mouse()
-# print()
+# for i in range(n):     # O(n^2)
+#     for j in range(n):
+#         print(i+j)
 #
-# cat = Animal('Roger', 10)
-# cat.info()
+# for i in range(n):     # O(n^2)
+#     for j in range(n):
+#         print(i+j)
 
-# приховані атрибути\методи
-
-class Cat(Animal): # name, age, is_vaccinated
-    def __init__(self, name, age, is_vaccinated=True):
-        super().__init__(name, age)
-        self._is_vaccinated = is_vaccinated  # прихований атрибут
-
-    def catch_mouse(self):
-        print("Ловить мишу")
-
-    def info(self):  # додатково писало що це кіт
-        print("Кіт")
-        # super() # super -- батьківський клас
-        super().info() # info з класу Animal
-
-        if self._is_vaccinated:
-            print("Вакцинований")
-        else:
-            print("Потрібно вакцинувати")
-
-    def vaccinate(self):
-        self._is_vaccinated = True
-
-    def unvaccinate(self):
-        self._is_vaccinated = False
+# import math
+#
+# N = 10**12
+# print(math.log(N))
 
 
-class Kitten(Cat):
-    pass
+# зв'язний список
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None  # вузол який йде наступним
+
+    def __str__(self):
+        return f"{self.data} -> {self.next}"
 
 
-cat1 = Cat('Tom', 2.5)
+# node1 = Node(4)
+# node2 = Node('abc')
+# node3 = Node(5)
+#
+# node1.next = node2
+# node2.next = node3
+#
+# print(node1)
 
-cat1.info()
 
-cat1.unvaccinate()
+class LinkedList:
+    def __init__(self):
+        self.head = None  # перший вузол, поки що список порожній
 
-cat1.info()
+    def append(self, data):
+        node = Node(data)
 
-# print(cat1._Cat__is_vaccinated)
+        # якщо список пустий
+        if self.head is None:
+            self.head = node
+            return  # кінець
 
-kitten = Kitten("Murchyck", 1)
-kitten.info()
+        # знайти останній вузол
+        end = self.head
+
+        while end.next is not None:  # поки можна рухатись далі
+            end = end.next
+
+        end.next = node
+
+    def __str__(self):
+        return str(self.head)
+
+
+class LinkedList1:
+    def __init__(self):
+        self.head = None  # перший вузол, поки що список порожній
+        self.tail = None  # останній вузол, поки що список порожній
+
+    def append(self, data):
+        node = Node(data)
+
+        # якщо список пустий
+        if self.head is None:
+            self.head = node
+            self.tail = node
+            return  # кінець
+
+        # добавити в кінець вузол
+        self.tail.next = node
+        self.tail = node
+
+    def __str__(self):
+        return str(self.head)
+
+
+list1 = LinkedList1()
+
+list1.append(2)
+list1.append(5)
+list1.append(1)
+list1.append(4)
+
+print(list1)
