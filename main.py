@@ -202,3 +202,6 @@ print(list1.pop_start())
 print(list1.pop_start())
 list1.push_end(1)
 print(list1)
+
+
+
