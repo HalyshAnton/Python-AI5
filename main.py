@@ -1,122 +1,54 @@
-# OOP
+# class Shop:
+#     def __init__(self):
+#         self.queue1 = DoublyLinkedList()
+#         self.queue2 = DoublyLinkedList()
+#         self.queue3 = DoublyLinkedList()
+#
+#     def get_queue(self, idx):
+#         if idx == 1:
+#             return self.queue1
+#         elif idx == 2:
+#             return self.queue2
+#         elif idx == 3:
+#             return self.queue3
+#
+#
+#     def add(self, name, idx):
+#         queue = self.get_queue(idx)
+#         queue.push_end(name)
 
-# def move(self, destination, distance):
-#     leaving_passengers = []
-#     left_passengers = []
-#
-#     for p in self.passengers:
-#         if p.destination == destination:
-#             leaving_passengers.append(p)
-#         else:
-#             left_passengers.append(p)
-#
-#     self.passengers = left_passengers
-#
-# a + b  # __add__
-# a > b  # __gt__
-# num in nums  # __contains__
-
-# структури даних
-
-# нотація O
-
-# n = 10
-# a = 2 + 3  # швидкість не залежить від n. O(1)
-#
-#
-# for i in range(n):  # кількість операцій залежить від n. O(n)
-#     print(i)
-#
-#
-# for i in range(n):     # O(n^2)
-#     for j in range(n):
-#         print(i+j)
-#
-# for i in range(n):     # O(n^2)
-#     for j in range(n):
-#         print(i+j)
-
-# import math
-#
-# N = 10**12
-# print(math.log(N))
-
-
-# зв'язний список
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None  # вузол який йде наступним
+class Passenger:
+    def __init__(self, name, destination):
+        self.name = name
+        self.destination = destination
 
     def __str__(self):
-        return f"{self.data} -> {self.next}"
+        return f"{self.name} - {self.destination}"
+
+    def __repr__(self):
+        return f"{self.name} - {self.destination}"
 
 
-# node1 = Node(4)
-# node2 = Node('abc')
-# node3 = Node(5)
-#
-# node1.next = node2
-# node2.next = node3
-#
-# print(node1)
+# Завдання 2
+# Створіть клас Transport з атрибутами
+#  speed – швидкість
+# Методи
+#  move(destination, distance) – рухається до місця
+# призначення, виводить інформацію як довго їхали
+
+class Transport:
+    def __init__(self, speed):
+        self.speed = speed
+
+    def move(self, destination, distance):
+        print(f"До місця {destination} їхали {distance // self.speed} годин.")
 
 
-# class LinkedList:
-#     def __init__(self):
-#         self.head = None  # перший вузол, поки що список порожній
-#
-#     def append(self, data):
-#         node = Node(data)
-#
-#         # якщо список пустий
-#         if self.head is None:
-#             self.head = node
-#             return  # кінець
-#
-#         # знайти останній вузол
-#         end = self.head
-#
-#         while end.next is not None:  # поки можна рухатись далі
-#             end = end.next
-#
-#         end.next = node
-#
-#     def __str__(self):
-#         return str(self.head)
-#
-#
-# class LinkedList1:
-#     def __init__(self):
-#         self.head = None  # перший вузол, поки що список порожній
-#         self.tail = None  # останній вузол, поки що список порожній
-#
-#     def append(self, data):
-#         node = Node(data)
-#
-#         # якщо список пустий
-#         if self.head is None:
-#             self.head = node
-#             self.tail = node
-#             return  # кінець
-#
-#         # добавити в кінець вузол
-#         self.tail.next = node
-#         self.tail = node
-#
-#     def __str__(self):
-#         return str(self.head)
-#
-#
-# list1 = LinkedList1()
-#
-# list1.append(2)
-# list1.append(5)
-# list1.append(1)
-# list1.append(4)
-#
-# print(list1)
-
+# list1 = []
+# list1[2]  # O(N) -- кількість операцій співрадає(в середньому) з кількітю елементів у списку
+# list1[::-1]  # задом наперед O(N)
+# list1 += [1, 2, 3]  # O(N)
+# list1.append(2)  # O(N)
 
 class Node:
     def __init__(self, data):
@@ -129,7 +61,14 @@ class Node:
 
 
 class DoubleLinkedList:
+    """
+    Клас двозв'язного списку.
+    """
+
     def __init__(self):
+        """
+        Ініціалізація порожнього списку.
+        """
         self.head = None
         self.tail = None
 
@@ -137,6 +76,10 @@ class DoubleLinkedList:
         return str(self.head)
 
     def push_end(self, data):
+        """
+        Додає елемент у кінець списку.
+        :param data: Дані для додавання
+        """
         new_node = Node(data)
         if not self.head:
             self.head = new_node
@@ -147,6 +90,10 @@ class DoubleLinkedList:
             self.tail = new_node
 
     def push_start(self, data):
+        """
+        Додає елемент на початок списку.
+        :param data: Дані для додавання
+        """
         new_node = Node(data)
         if not self.head:
             self.head = new_node
@@ -157,6 +104,10 @@ class DoubleLinkedList:
             self.head = new_node
 
     def pop_end(self):
+        """
+        Видаляє останній елемент зі списку.
+        :return: Дані видаленого елемента або None, якщо список порожній
+        """
         if not self.tail:
             return None
 
@@ -172,6 +123,11 @@ class DoubleLinkedList:
         return data
 
     def pop_start(self):
+        """
+        Видаляє перший елемент зі списку.
+        :return: Дані видаленого елемента або None, якщо список порожній
+        """
+
         if not self.head:
             return None
 
@@ -183,25 +139,79 @@ class DoubleLinkedList:
         else:
             self.head = self.head.next
             self.head.prev = None
-
         return data
 
+    def is_empty(self):
+        """
+        Чи є порожній
+        :return: True якщо порожній
+        """
+        return self.head is None
 
-list1 = DoubleLinkedList()
+    def peek(self):
+        """
+        Повертає останній елемент, не видаляючи його
+        :return: останній елемент
+        """
+        return self.tail.data
 
-list1.push_end(2)
-list1.push_start(5)
-list1.push_end(1)
-list1.push_start(4)
 
-print(list1)
 
-print(list1.pop_end())
-print(list1)
-print(list1.pop_start())
-print(list1.pop_start())
-list1.push_end(1)
-print(list1)
+# stack = DoubleLinkedList()
+# print(stack)
+#
+# stack.push_end(2)  # добавити до стеку
+# print(stack)
+#
+# stack.push_end(4)
+# stack.push_end(1)
+# stack.push_end(5)
+# print(stack)
+#
+#
+# last_num = stack.pop_end()
+# print(f"{last_num=}")
+# print(stack)
 
+# є послідовність символів, видалити дублікати,
+# які знаходяться пору
+
+# abbbccccaaaabbb -> abcab
+
+text = "abbbccccaaaabbb"
+stack = DoubleLinkedList()
+
+for char in text:
+    # якщо стек порожній
+    # print(stack)
+    if stack.is_empty():
+        stack.push_end(char)
+        continue  # переходимо до наступної літери
+
+    # last_char = stack.pop_end()  # дістаємо останню
+    #
+    # if last_char == char:
+    #     # вертаємо last_char назад
+    #     stack.push_end(last_char)
+    # else:
+    #     stack.push_end(last_char)
+    #     stack.push_end(char)
+
+
+    # з peek
+    last_char = stack.peek()
+
+    if last_char != char:
+        stack.push_end(char)
+
+
+# перевести стек в str
+new_text = ''
+
+while not stack.is_empty():
+    last_char = stack.pop_end()
+    new_text = last_char + new_text
+
+print(new_text)
 
 
