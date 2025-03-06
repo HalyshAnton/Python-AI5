@@ -206,12 +206,54 @@ for char in text:
 
 
 # перевести стек в str
-new_text = ''
+# new_text = ''
+#
+# while not stack.is_empty():
+#     last_char = stack.pop_end()
+#     new_text = last_char + new_text
+#
+# print(new_text)
 
-while not stack.is_empty():
-    last_char = stack.pop_end()
-    new_text = last_char + new_text
 
-print(new_text)
-
-
+# Є вираз з дужками, за допомогою стеків визначіть чи
+# правильно розтавлені дужки, якщо ні то виведіть індекс
+# «проблемної» дужки.
+# def highlight_character(text, ind):
+#     for i, char in enumerate(text, start=1):
+#         if i == ind:
+#             print(f"\033[91m{char}\033[0m", end="")
+#         else:
+#             print(char, end="")
+#     print()
+#
+#
+# text = "2+(3*[5+6])/{(1+5+7)-(1+[-8])}"
+#
+# stack = DoubleLinkedList()
+#
+# is_correct = True
+#
+# for char in text:
+#     if char in "([{":
+#         stack.push_end(char)
+#     elif char in ")]}":
+#         if stack.is_empty():
+#             is_correct = False
+#             break
+#
+#         last_char = stack.pop_end()
+#
+#         if last_char + char in ["()", '[]', '{}']:
+#             is_correct = True
+#         else:
+#             is_correct = False
+#             break
+#
+# if not stack.is_empty():
+#     is_correct = False
+#
+#
+# print(is_correct)
+#
+#
+# highlight_character(text, 10)
