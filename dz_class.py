@@ -1,80 +1,29 @@
-class Task:
-    def __init__(self, name):
-        self.name = name
-        self.subtasks = []
-
-    def do(self):
-        """
-        Виконує завдання, за потреби розбиває його на підзавдання
-        :return: список підзавдань
-        """
-        if self.subtasks:
-            print(f"Виконую завдання: {self.name}. Розбиваю на підзавдання")
-        else:
-            print(f"Завершено завдання: {self.name}")
-
-        return self.subtasks
-
-
-class Project:
-    ## YOUR CODE
+class Department:
+    # YOUR CODE
     pass
 
 
-task = Task('Підготовка до зйомок')
+class Hospital:
+    # YOUR CODE
+    pass
 
-task.subtasks = [
-    Task('Пошук локацій'),
-    Task('Підготовка сценарію'),
-    Task('Кастинг акторів')
-]
 
-# Підзавдання для "Пошук локацій"
-task.subtasks[0].subtasks = [
-    Task('Огляд локацій у місті'),
-    Task('Огляд локацій за містом'),
-    Task('Узгодження місць для зйомок')
-]
+# Створення відділень
+cardiology = Department("Кардіологія")
+surgery = Department("Хірургія")
+therapy = Department("Терапія")
+neurology = Department("Неврологія")
 
-# Підзавдання для "Підготовка сценарію"
-task.subtasks[1].subtasks = [
-    Task('Написання основного сценарію'),
-    Task('Редагування сценарію'),
-    Task('Підготовка сценарних приміток'),
-]
+# Ініціалізація лікарні з переданими відділеннями
+hospital = Hospital([cardiology, surgery, therapy, neurology])
 
-# Підзавдання для "Кастинг акторів"
-task.subtasks[2].subtasks = [
-    Task('Пошук головних акторів'),
-    Task('Пошук другорядних акторів'),
-    Task('Підготовка контрактів для акторів')
-]
+hospital.add("Іван", 2, "Кардіологія")
+hospital.add("Анна", 4, "Хірургія")
+hospital.add("Марія", 3, "Терапія")
+hospital.add("Олег", 1, "Неврологія")
+hospital.add("Сергій", 4, "Кардіологія")
 
-# Підзавдання для "Пошук локацій у місті"
-task.subtasks[0].subtasks[0].subtasks = [
-    Task('Вибір декорацій для зйомок'),
-    Task('Узгодження з власниками приміщень')
-]
+cardiology.treat_next()  # лікує Сергія
+surgery.treat_next()  # лікує Анну
 
-# Підзавдання для "Огляд локацій за містом"
-task.subtasks[0].subtasks[1].subtasks = [
-    Task('Вибір лісу для сцени битви'),
-    Task('Пошук старовинних будівель для сцени'),
-]
-
-# Підзавдання для "Написання основного сценарію"
-task.subtasks[1].subtasks[0].subtasks = [
-    Task('Написання першої частини'),
-    Task('Написання другої частини'),
-]
-
-# Підзавдання для "Пошук головних акторів"
-task.subtasks[2].subtasks[0].subtasks = [
-    Task('Пошук актора на роль головного героя'),
-    Task('Пошук актриси на роль головної героїні')
-]
-
-project = Project(task)
-
-while not project.is_finished():
-    project.do_task()
+hospital.show_statistics()
