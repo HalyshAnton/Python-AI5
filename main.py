@@ -1,143 +1,116 @@
-# class Node:
-#     def __init__(self, data):
-#         self.data = data
-#         self.left = None
-#         self.right = None
-#
-#
-# class BinaryTree:
-#     def __init__(self):
-#         self.root = None
-#
-#     def add(self, data):
-#         node = Node(data)
-#
-#         if self.root is None:
-#             self.root = node
-#             return
-#
-#         self._recursive_add(self.root, node)
-#
-#     def _recursive_add(self, tree_node, added_node):
-#         if added_node.data < tree_node.data:
-#             # рухаємося наліво
-#
-#             # перевіряємо чи пусто зліва
-#             if tree_node.left is None:
-#                 tree_node.left = added_node
-#                 return  # рекурсія(цикл) закінчується
-#
-#             # якщо не пусто
-#             self._recursive_add(tree_node.left, added_node)
-#         else:
-#             # рухаємося направо
-#
-#             # перевіряємо чи пусто справа
-#             if tree_node.right is None:
-#                 tree_node.right = added_node
-#                 return  # рекурсія(цикл) закінчується
-#
-#             # якщо не пусто
-#             self._recursive_add(tree_node.right, added_node)
-#
-#     def display(self):
-#         nodes_to_display = [self.root]
-#
-#         while len(nodes_to_display) != 0:
-#             # відображаємо все що є в nodes_to_display
-#             for node in nodes_to_display:
-#                 print(node.data, end=' ')
-#             print()
-#
-#             # отримуємо наступні вузли
-#             new_nodes = []
-#             for node in nodes_to_display:
-#                 if node.left is not None:
-#                     new_nodes.append(node.left)
-#
-#                 if node.right is not None:
-#                     new_nodes.append(node.right)
-#
-#             # замінюємо nodes_to_display на нові вузли
-#             nodes_to_display = new_nodes
-#
-#     def get_min(self):
-#         # отримати найменший елемент
-#
-#         node = self.root
-#
-#         while node.left is not None:
-#             node = node.left
-#
-#         return node.data
-#
-#     def find(self, num):
-#         # якщо num в корені
-#         if self.root.data == num:
-#             return True
-#
-#         return self._recursive_find(self.root, num)
-#
-#     def _recursive_find(self, tree_node, num):
-#         # числа нема
-#         if tree_node is None:
-#             return False
-#
-#         # число знайдене
-#         if tree_node.data == num:
-#             return True
-#
-#         if num < tree_node.data:
-#             return self._recursive_find(tree_node.left, num)
-#         else:
-#             return self._recursive_find(tree_node.right, num)
-#
-#
-# tree = BinaryTree()
-# tree.add(5)
-# tree.add(4)
-# tree.add(6)
-# tree.add(3)
-# tree.add(2)
-# tree.add(1)
-# tree.add(0)
-# # tree.display()
-# print(tree.get_min())
-# print(tree.find(1))
-# print(tree.find(10))
-
-import bintrees
-
-class Node:
-    def __init__(self, data):
-        self.key = data  # вирішуємо наліво чи направо
-        self.value = None # додаткова інформація
-        self.left = None
-        self.right = None
+#data = 'Hello, world'
 
 
-tree = bintrees.AVLTree()
+# with open('data.txt', 'w') as file:
+#     file.write(data)
+#     #print(data, file=file)
 
-tree.insert(key=10, value='apple')
-tree.insert(key=11, value='orange')
-tree.insert(key=5, value='pear')
-tree.insert(key=9, value='melon')
-tree.insert(key=20, value='banana')
+# with open('data.txt', 'r') as file:
+#     data = file.read()
+#
+#
+# print(type(data))
+# print(data)
+
+import json
 
 
-# дістати елемент з id 5
-print(tree[5])
+# data = {'number': 24}
+# data = [1, 2, 'hello']
+# bytes = json.dumps(data)  # переводить дані у серію байтів(серіалізація)
+# print(type(bytes))
+# print(bytes)
+#
+# new_data = json.loads(bytes)  # переводить байти назад в об'єкт(десеріалізація)
+# print(type(new_data))
+# print(new_data)
 
-# ключі str
+# файли
 
-tree = bintrees.AVLTree()
+# зберегти дані у файл json
+# data = {"number": 25, "text": "Hello"}
+#
+# with open('data.json', 'w') as file:
+#     json.dump(data, file, indent=4)
+#
+# # завантажити дані з файли
+# with open('data.json', 'r') as file:
+#     new_data = json.load(file)
+#
+# print(new_data)
 
-tree.insert(key='apple', value='sweet juicy apple ')
-tree.insert(key='orange', value='orange')
-tree.insert(key='pear', value='pear')
-tree.insert(key='melon', value='melon')
-tree.insert(key='banana', value='banana')
 
-print(tree['apple'])
+# Користувач водить текстові повідомлення, зберегти
+# їх у список і у файл. За потреба заіантажити історію спілкування
+
+# завантажити історію
+# with open("history.json", 'r') as file:
+#     history = json.load(file)
+#
+# # головний цикл
+# while True:
+#     text = input("Введіть повідомлення: ")
+#
+#     if text == "":  # якщо порожньо, то кінець програми
+#         # перед завершенням зберегти історію
+#         with open("history.json", 'w') as file:
+#             json.dump(history, file)
+#         break
+#
+#     elif text == "show": # показати історію
+#         print("History")
+#         for message in history:
+#             print(f"\t {message}")
+#
+#     else:
+#         # просто повідомлення добавити в історію
+#         history.append(text)
+
+
+# збереждення об'єктів класів
+
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def celebrate_birthday(self):
+        print(f"{self.name} святкує день народження")
+        self.age += 1
+
+    def state_dict(self): # словник з атрибутами
+        data = {
+            'name': self.name,
+            'age': self.age
+        }
+
+        return data
+
+    def load(self, filename):
+        with open(filename, 'r') as file:
+            data = json.load(file)
+
+        self.name = data['name']
+        self.age = data['age']
+
+
+person = Person('', '')
+person.load('data.json')
+person.celebrate_birthday()
+
+# person = Person("John", 30)
+# person.celebrate_birthday()
+# person.celebrate_birthday()
+#
+# with open('data.json', 'w') as file:
+#     json.dump(person.state_dict(), file) # збереження словника з атрибутами
+#
+#
+# # завантаження даних
+# with open('data.json', 'r') as file:
+#     data = json.load(file)
+#
+# new_person = Person(data['name'], data['age'])
+
 
 
