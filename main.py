@@ -1,116 +1,106 @@
-#data = 'Hello, world'
-
-
-# with open('data.txt', 'w') as file:
-#     file.write(data)
-#     #print(data, file=file)
-
-# with open('data.txt', 'r') as file:
-#     data = file.read()
-#
-#
-# print(type(data))
-# print(data)
-
 import json
 
 
-# data = {'number': 24}
-# data = [1, 2, 'hello']
-# bytes = json.dumps(data)  # переводить дані у серію байтів(серіалізація)
-# print(type(bytes))
-# print(bytes)
-#
-# new_data = json.loads(bytes)  # переводить байти назад в об'єкт(десеріалізація)
-# print(type(new_data))
-# print(new_data)
+data = [1, 2, 3, 4]
 
-# файли
-
-# зберегти дані у файл json
-# data = {"number": 25, "text": "Hello"}
+# JSON
+# збереження у файл
+# filename = 'data.json'
+# with open(filename, 'w') as file:
+#     json.dump(data, file)
 #
-# with open('data.json', 'w') as file:
-#     json.dump(data, file, indent=4)
 #
-# # завантажити дані з файли
-# with open('data.json', 'r') as file:
+# # завантаження з файла
+# with open(filename, 'r') as file:
 #     new_data = json.load(file)
 #
+#
 # print(new_data)
 
-
-# Користувач водить текстові повідомлення, зберегти
-# їх у список і у файл. За потреба заіантажити історію спілкування
-
-# завантажити історію
-# with open("history.json", 'r') as file:
-#     history = json.load(file)
-#
-# # головний цикл
-# while True:
-#     text = input("Введіть повідомлення: ")
-#
-#     if text == "":  # якщо порожньо, то кінець програми
-#         # перед завершенням зберегти історію
-#         with open("history.json", 'w') as file:
-#             json.dump(history, file)
-#         break
-#
-#     elif text == "show": # показати історію
-#         print("History")
-#         for message in history:
-#             print(f"\t {message}")
-#
-#     else:
-#         # просто повідомлення добавити в історію
-#         history.append(text)
+#Pickle
+import pickle
 
 
-# збереждення об'єктів класів
+data = [1, 2, 3, 4]
+
+# encoded = pickle.dumps(data)
+# print(encoded)
+
+# збереження у файл
+# w -- відкрити для запису
+# b -- відкрити як двійковий файл(файл з байтами)
+
+# with open('data.pkl', 'wb') as file:
+#    pickle.dump(data, file)
+#     #file.write('data')
+
+#
+# # завантаження з файла
+# with open('data.pkl', 'rb') as file:
+#     new_data = pickle.load(file)
+#
+# print(new_data)
+
+# dump -- робота з файлом
+# dumps -- робота без файла
+
+
+# класи
 
 class Person:
     def __init__(self, name, age):
         self.name = name
         self.age = age
 
-    def celebrate_birthday(self):
-        print(f"{self.name} святкує день народження")
-        self.age += 1
+    def print_info(self):
+        print(f"{self.name}, {self.age} років")
 
-    def state_dict(self): # словник з атрибутами
-        data = {
-            'name': self.name,
-            'age': self.age
-        }
-
-        return data
-
-    def load(self, filename):
-        with open(filename, 'r') as file:
-            data = json.load(file)
-
-        self.name = data['name']
-        self.age = data['age']
+    def __repr__(self):
+        return f"{self.name}, {self.age} років"
 
 
-person = Person('', '')
-person.load('data.json')
-person.celebrate_birthday()
-
-# person = Person("John", 30)
-# person.celebrate_birthday()
-# person.celebrate_birthday()
+# person1 = Person('Mary', 27)
+# person2 = Person("John", 34)
+# person3 = Person('Jack', 42)
 #
-# with open('data.json', 'w') as file:
-#     json.dump(person.state_dict(), file) # збереження словника з атрибутами
+# persons = [person1, person2, person3]
+#
+# with open('data.pkl', 'wb') as file:
+#     pickle.dump(persons, file)
 #
 #
-# # завантаження даних
-# with open('data.json', 'r') as file:
-#     data = json.load(file)
+# with open("data.pkl", 'rb') as file:
+#     data = pickle.load(file)
 #
-# new_person = Person(data['name'], data['age'])
+#
+# print(data)
+# jack = data[2]
+#
+#jack.print_info()
 
 
 
+# gzip
+import gzip
+
+
+data = [1, 2, 3, 4]
+
+with gzip.open('data.zip', 'wb') as file:
+    # кодуємо дані у байти
+    encoded_data = pickle.dumps(data)
+
+    # зберігаємо закодовані дані у файл
+    file.write(encoded_data)
+
+
+with gzip.open('data.zip', 'rb') as file:
+    # читаємо закодовані дані
+    encoded_data = file.read()
+
+    # розшифровуємо дані
+    new_data = pickle.loads(encoded_data)
+
+
+print(encoded_data)
+print(new_data)
