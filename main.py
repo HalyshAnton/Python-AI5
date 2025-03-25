@@ -114,3 +114,16 @@ thread2.join()
 
 print(nums)
 
+
+# дз
+# nums = [] # global
+#
+# t1
+# t2
+# t3
+#
+# t1.start() # читаєте дані
+# t1.join() # чекаємо поки прочитаються дані
+#
+# t2.start()
+# t3.start()
