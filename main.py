@@ -1,106 +1,116 @@
-import json
+# Як було раніше
 
-
-data = [1, 2, 3, 4]
-
-# JSON
-# збереження у файл
-# filename = 'data.json'
-# with open(filename, 'w') as file:
-#     json.dump(data, file)
+# def func1():
+#     print('Hello from func1')
 #
 #
-# # завантаження з файла
-# with open(filename, 'r') as file:
-#     new_data = json.load(file)
+# def func2():
+#     print('Hello from func2')
 #
 #
-# print(new_data)
+# func1()  # виконується код з func1
+# func2()  # чекає поки завершиться попередній код, тоді починає роботу
+# func2()
+# func1()
 
-#Pickle
-import pickle
+# створення потоків
+import threading
+import time
 
-
-data = [1, 2, 3, 4]
-
-# encoded = pickle.dumps(data)
-# print(encoded)
-
-# збереження у файл
-# w -- відкрити для запису
-# b -- відкрити як двійковий файл(файл з байтами)
-
-# with open('data.pkl', 'wb') as file:
-#    pickle.dump(data, file)
-#     #file.write('data')
-
-#
-# # завантаження з файла
-# with open('data.pkl', 'rb') as file:
-#     new_data = pickle.load(file)
-#
-# print(new_data)
-
-# dump -- робота з файлом
-# dumps -- робота без файла
-
-
-# класи
-
-class Person:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
-
-    def print_info(self):
-        print(f"{self.name}, {self.age} років")
-
-    def __repr__(self):
-        return f"{self.name}, {self.age} років"
-
-
-# person1 = Person('Mary', 27)
-# person2 = Person("John", 34)
-# person3 = Person('Jack', 42)
-#
-# persons = [person1, person2, person3]
-#
-# with open('data.pkl', 'wb') as file:
-#     pickle.dump(persons, file)
+# def func1():
+#     for i in range(1000_000):
+#         if i % 100_000 == 0:  # виводити раз на 100_000
+#             print('Hello from func1\n', end='')
 #
 #
-# with open("data.pkl", 'rb') as file:
-#     data = pickle.load(file)
+# def func2():
+#     for i in range(1000_000):
+#         if i % 100_000 == 0:
+#             print('Hello from func2\n', end='')
 #
 #
-# print(data)
-# jack = data[2]
+# # потік для виконання функції func1
+# thread1 = threading.Thread(target=func1)
 #
-#jack.print_info()
+# # потік для виконання функції func2
+# thread2 = threading.Thread(target=func2)
+#
+#
+# # запускаємо потоки
+# thread1.start()
+# thread2.start()
+#
+# print('hello before join')  # може запуститись коли потоки ще працюють
+#
+# # момент коли потоки закінчили роботу
+# thread1.join()
+# thread2.join()
+#
+# print('END')  # запуститься коли потоки закінчили роботу
+
+# функції з параметрами
+
+# def greeting(name, age):
+#     for i in range(1000_000):
+#         if i % 100_000 == 0:
+#             print(f'Привіт {name}, {age} років\n', end='')
+#
+#
+# def summa(nums):
+#     for i in range(1000_000):
+#         if i % 100_000 == 0:
+#             print(f'Сума чисел {nums} = {sum(nums)}\n', end='')
+#
+#
+# nums = [1, 2, 3, 4]
+#
+# # thread1 = threading.Thread(target=greeting, args=('John',), kwargs={"age": 35})
+# thread1 = threading.Thread(target=greeting, args=('John', 35))
+# thread2 = threading.Thread(target=summa, args=(nums,))
+#
+# thread1.start()
+# thread2.start()
+#
+# thread1.join()
+# thread2.join()
 
 
+# спільна ділянка пам'яті
 
-# gzip
-import gzip
-
-
-data = [1, 2, 3, 4]
-
-with gzip.open('data.zip', 'wb') as file:
-    # кодуємо дані у байти
-    encoded_data = pickle.dumps(data)
-
-    # зберігаємо закодовані дані у файл
-    file.write(encoded_data)
+nums = [1, 2, 3, 4]
+lock = threading.Lock()
 
 
-with gzip.open('data.zip', 'rb') as file:
-    # читаємо закодовані дані
-    encoded_data = file.read()
+def append():
+    # дістати nums зі спільної області пам'яті
+    global nums, lock
 
-    # розшифровуємо дані
-    new_data = pickle.loads(encoded_data)
+    for num in range(1000):
+        # працює зі спільною ділянкою пам'яті
+        # інші потоки зупиняються поки цей не завершить роботу
+        lock.acquire()
+
+        nums.append(num)
+
+        lock.release()  # роботу завершено, інші потоки можуть працювати
+
+def remove():
+    global nums, lock
+
+    for _ in range(1000):
+        lock.acquire()
+        nums.pop(0)
+        lock.release()
 
 
-print(encoded_data)
-print(new_data)
+thread1 = threading.Thread(target=append)
+thread2 = threading.Thread(target=remove)
+
+thread1.start()
+thread2.start()
+
+thread1.join()
+thread2.join()
+
+print(nums)
+
