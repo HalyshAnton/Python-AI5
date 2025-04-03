@@ -75,15 +75,75 @@ SELECT EXTRACT(YEAR FROM AGE(BIRTH_DAY)), AGE
 FROM PEOPLE
 
 
+-- АГРЕГУЮЧІ ФУНКЦІ
+-- MIN, MAX, SUM, AVG, COUNT
+
+-- СЕРЕДНІЙ ВІК ЛЮДЕЙ
+
+SELECT AVG(AGE)
+FROM PEOPLE
+
+-- З УМОВОЮ
+SELECT AVG(AGE)
+FROM PEOPLE
+WHERE CITY = 'London'
+
+-- НОВА НАЗВА СТОВПЧИКА
+
+SELECT AVG(AGE) AS AVERAGE_AGE, MAX(AGE) AS MAX_AGE
+FROM PEOPLE
+WHERE CITY = 'London'
+
+-- СЕРЕДНІЙ ВІК В КОЖНОМУ МІСТІ
+SELECT CITY, AVG(AGE) AS AVERAGE_AGE
+FROM PEOPLE
+GROUP BY CITY -- ГРУПУЄМО ПО МІСТАХ
+
+--КІЛЬКІСТЬ ЖИТЕЛІВ В МІСТАХ
+SELECT CITY, COUNT(*)
+FROM PEOPLE
+GROUP BY CITY;
+
+-- МАКСИМАЛЬНА КІЛЬКІСТЬ ЖИТЕЛІВ В ОДНОМУ МІСТІ
+-- ТИМЧАСОВА ТАБЛИЦЯ
+WITH CITY_COUNT AS(
+	SELECT CITY, COUNT(*) AS POPULATION
+	FROM PEOPLE
+	GROUP BY CITY
+)
+SELECT MAX(POPULATION)
+FROM CITY_COUNT
+
+-- НАЗВА НАЙЗАСЕЛЕНІШОГО МІСТА
+
+WITH CITY_COUNT AS(
+	SELECT CITY, COUNT(*) AS POPULATION
+	FROM PEOPLE
+	GROUP BY CITY
+)
+SELECT CITY
+FROM CITY_COUNT
+WHERE POPULATION = (
+	SELECT MAX(POPULATION)
+	FROM CITY_COUNT
+)
 
 
-
-
-
-
-
-
-
-
+-- ЛЮДИ, ЩО ЖИВУТЬ В НАЙЗАСЕЛЕНІШОМУ МІСТІ
+WITH CITY_COUNT AS(
+	SELECT CITY, COUNT(*) AS POPULATION
+	FROM PEOPLE
+	GROUP BY CITY
+)
+SELECT PERSON_NAME, CITY
+FROM PEOPLE
+WHERE CITY = (
+	SELECT CITY
+	FROM CITY_COUNT
+	WHERE POPULATION = (
+		SELECT MAX(POPULATION)
+		FROM CITY_COUNT
+	)
+)
 
 
