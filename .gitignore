@@ -3,3 +3,5 @@ __pycache__
 .idea/*
 
 password.txt
+random_generator.py
+students.csv
