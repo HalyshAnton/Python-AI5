@@ -5,3 +5,4 @@ __pycache__
 password.txt
 random_generator.py
 students.csv
+config.json
