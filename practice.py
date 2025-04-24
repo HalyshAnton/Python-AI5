@@ -189,7 +189,7 @@ while True:
 
     if command == '1':
         insert_row2()
-    if command == '2':
+    elif command == '2':
         update_row()
     else:
         print('невірна команда')
