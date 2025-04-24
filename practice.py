@@ -142,7 +142,7 @@ def update_row():
     # запит для зміни рядка
     query = f"""
     UPDATE {table_name}
-    SET {column_name} = {value}
+    SET {column_name} = '{value}'
     WHERE id = {id}
     """
 
