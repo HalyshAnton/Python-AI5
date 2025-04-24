@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Sequence, Date
+from sqlalchemy import create_engine, MetaData, insert
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import text
@@ -11,61 +11,124 @@ with open('config.json', 'r') as file:
     password = data['password']
 
 # підключаємось до бд itstep
-db_url = f"postgresql+pg8000://{login}:{password}@localhost:5432/itstep"
+db_url = f"postgresql+pg8000://{login}:{password}@localhost:5432/hospital"
 engine = create_engine(db_url)
 
-# створення батьківського класу
-Base = declarative_base()
+metadata = MetaData()
+metadata.reflect(bind=engine)
 
-# ствлорення класу для таблиці User
-class User(Base):
-    __tablename__ = 'users'
-
-    # стовпчики
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
-    name = Column(String(30))
-    city = Column(String(50))
-
-    def __repr__(self):
-        return f"User(id={self.id}, name={self.name}, city={self.city})"
-
-# добавляємо всі таблиці в базу даних
-Base.metadata.create_all(engine)
-
-# створюємо сесію
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# # створюємо юзерів
-# user1 = User(name='Jhon', city='LA')
-# user2 = User(name='Sophia', city='London')
-#
-# # добавити юзерів у базу даних
-# users = [user1, user2]
-# session.add_all(users)
-#
-# # внести всі зміни в базу даних
-# session.commit()
+# вивести назви доступних таблиць
+# for table_name in metadata.tables:
+#     print(table_name)
 
-# показати усі рядки таблиці(через session)
-rows = session.query(User).all()
 
-for row in rows:
-    print(row)
+# print(metadata.tables)
 
-# показати усі рядки таблиці(через SQL)
-# запит як str
-query = """
-SELECT *
-FROM USERS
-"""
+# Вставляти рядки в таблиці бази даних.
+# ■ Оновлення рядків у таблицях бази даних. При спробі
+# оновлення усіх рядків в одній таблиці надайте запит на
+# підтвердження користувачеві. Оновлювати усі рядки
+# можна лише після підтвердження користувачем.
+# ■ Видалення рядків з таблиць баз даних. При спробі видалити
+# усі рядки в одній таблиці потрібно видавати користувачу
+# запит на підтвердження. Видаляти усі рядки, можна тільки
+# після підтвердження користувачем.
 
-query_sql = text(query)
+def get_table():
+    print('Виберіть таблицю з бази')
 
-# виконуємо запит
-result = session.execute(query_sql)
-rows = result.fetchall()
+    for table_name in metadata.tables:
+        print(f'\t{table_name}')
 
-for row in rows:
-    print(type(row))
-    print(row.name)
+    user_table_name = input('Ваша відповідь: ')
+
+    return user_table_name
+
+def insert_row():
+    table_name = get_table()
+
+    # отримуємо саму таблицю по її назві
+    table = metadata.tables[table_name]
+
+    # список з даними рядка
+    values = []
+
+    # список з назвами стовпців
+    column_names = []
+
+    for column in table.columns:
+        # пропускаємо стовпчик id
+        if column.name == 'id':
+            continue
+
+        value = input(f'{column.name} = ')
+
+        values.append(value)
+        column_names.append(column.name)
+
+    # назви стовпців без лапок
+    new_column_names = tuple(column_names)
+    new_column_names = str(new_column_names)
+    new_column_names = new_column_names.replace('\'', '')
+
+    # запит по добавлянню рядка
+
+    query = f"""
+    INSERT INTO {table_name}
+    {new_column_names}
+    VALUES {tuple(values)}
+    """
+
+    # print(query)
+
+    # виконати запит та обробити помилки
+    try:
+        query = text(query)
+        session.execute(query)
+        session.commit()
+    except Exception as err:
+        print(f"Помилка {err}")
+
+
+def insert_row2():
+    # теж саме але без запиту
+    table_name = get_table()
+
+    # отримуємо саму таблицю по її назві
+    table = metadata.tables[table_name]
+
+    # словник: ключ - назва стовпця, значення - те що ввів користувач
+    values = {}
+
+
+    for column in table.columns:
+        # пропускаємо стовпчик id
+        if column.name == 'id':
+            continue
+
+        value = input(f'{column.name} = ')
+
+        values[column.name] = value
+
+    # добавляємо рядок
+    query = insert(table).values(values)
+
+    try:
+        session.execute(query)
+        session.commit()
+    except Exception as err:
+        print(f"Помилка {err}")
+
+
+while True:
+    print("1 - вставити рядок в таблицю")
+
+    command = input('Введіть номер команди: ')
+
+    if command == '1':
+        insert_row2()
+    else:
+        print('невірна команда')
