@@ -123,12 +123,48 @@ def insert_row2():
         print(f"Помилка {err}")
 
 
+def update_row():
+    # теж саме але без запиту
+    table_name = get_table()
+
+    # отримуємо саму таблицю по її назві
+    table = metadata.tables[table_name]
+
+    id = int(input('Виберіть id рядка: '))
+
+    print('Виберіть назву стовпчика')
+    for column in table.columns:
+        print(f"\t{column.name}")
+
+    column_name = input('Ваша відповідь: ')
+    value = input('Ведіть нове значення: ')
+
+    # запит для зміни рядка
+    query = f"""
+    UPDATE {table_name}
+    SET {column_name} = {value}
+    WHERE id = {id}
+    """
+
+    # виконати запит та обробити помилки
+    try:
+        query = text(query)
+        session.execute(query)
+        session.commit()
+    except Exception as err:
+        print(f"Помилка {err}")
+
+
+
 while True:
     print("1 - вставити рядок в таблицю")
+    print("2 - змінити рядок в таблиці")
 
     command = input('Введіть номер команди: ')
 
     if command == '1':
         insert_row2()
+    if command == '2':
+        update_row()
     else:
         print('невірна команда')
