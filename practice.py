@@ -130,6 +130,9 @@ def update_row():
     # отримуємо саму таблицю по її назві
     table = metadata.tables[table_name]
 
+    # показати таблицю
+    show_table(table_name)
+
     id = int(input('Виберіть id рядка: '))
 
     print('Виберіть назву стовпчика')
@@ -154,6 +157,28 @@ def update_row():
     except Exception as err:
         print(f"Помилка {err}")
 
+
+def show_table(table_name):
+    table = metadata.tables[table_name]
+
+    query = f"""
+    SELECT *
+    FROM {table_name}
+    """
+
+    query = text(query)
+    rows = session.execute(query)
+    rows = rows.fetchall()
+
+    # вивід назв стовпчиків
+    for column in table.columns:
+        print(column.name, end='\t\t')
+    print()
+
+    for row in rows:
+        for value in row:
+            print(value, end='\t\t')
+        print()
 
 
 while True:
