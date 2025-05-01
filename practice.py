@@ -1,195 +1,154 @@
-from sqlalchemy import create_engine, MetaData, insert
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.sql import text
-import json
-
-# завантажуємо логін та пароль
-with open('config.json', 'r') as file:
-    data = json.load(file)
-    login = data['login']
-    password = data['password']
-
-# підключаємось до бд itstep
-db_url = f"postgresql+pg8000://{login}:{password}@localhost:5432/hospital"
-engine = create_engine(db_url)
-
-metadata = MetaData()
-metadata.reflect(bind=engine)
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# вивести назви доступних таблиць
-# for table_name in metadata.tables:
-#     print(table_name)
+# sql ін'єкція
+# SELECT *
+# FROM TABLE
+# WHERE PASSWORD = '{user_password}'
+#
+#
+# user_password = 123' OR '2' = '2
+#
+# SELECT *
+# FROM TABLE
+# WHERE PASSWORD = '123' OR '2' = '2'
 
 
-# print(metadata.tables)
+# import redis
+#
+# server = redis.Redis(host='localhost', port=6379,
+#                      db=0, decode_responses=True
+#                      )
+#
+# server.set('user:name', 'Антон')
+#
+# name = server.get('user:name')
+# print(name)
 
-# Вставляти рядки в таблиці бази даних.
-# ■ Оновлення рядків у таблицях бази даних. При спробі
-# оновлення усіх рядків в одній таблиці надайте запит на
-# підтвердження користувачеві. Оновлювати усі рядки
-# можна лише після підтвердження користувачем.
-# ■ Видалення рядків з таблиць баз даних. При спробі видалити
-# усі рядки в одній таблиці потрібно видавати користувачу
-# запит на підтвердження. Видаляти усі рядки, можна тільки
-# після підтвердження користувачем.
+#Завдання 1
+# Реалізуйте консольний додаток «Кошик» для
+# вебмагазину. Додаток має надавати функціональність
+# для роботи з кошиком. Можливості додатку:
+# ■ Вхід у кошик за логіном та паролем;
+# ■ Додати товар у кошик;
+# ■ Видаляти товар з кошика;
+# ■ Змінити товар у кошику;
+# ■ Повне очищення кошика;
+# ■ Пошук даних у кошику;
+# ■ Перегляд вмісту кошика.
+# Зберігайте дані у базі даних NoSQL.
+# Можете використовувати Redis в якості платформи
 
-def get_table():
-    print('Виберіть таблицю з бази')
-
-    for table_name in metadata.tables:
-        print(f'\t{table_name}')
-
-    user_table_name = input('Ваша відповідь: ')
-
-    return user_table_name
-
-def insert_row():
-    table_name = get_table()
-
-    # отримуємо саму таблицю по її назві
-    table = metadata.tables[table_name]
-
-    # список з даними рядка
-    values = []
-
-    # список з назвами стовпців
-    column_names = []
-
-    for column in table.columns:
-        # пропускаємо стовпчик id
-        if column.name == 'id':
-            continue
-
-        value = input(f'{column.name} = ')
-
-        values.append(value)
-        column_names.append(column.name)
-
-    # назви стовпців без лапок
-    new_column_names = tuple(column_names)
-    new_column_names = str(new_column_names)
-    new_column_names = new_column_names.replace('\'', '')
-
-    # запит по добавлянню рядка
-
-    query = f"""
-    INSERT INTO {table_name}
-    {new_column_names}
-    VALUES {tuple(values)}
-    """
-
-    # print(query)
-
-    # виконати запит та обробити помилки
-    try:
-        query = text(query)
-        session.execute(query)
-        session.commit()
-    except Exception as err:
-        print(f"Помилка {err}")
+import redis
 
 
-def insert_row2():
-    # теж саме але без запиту
-    table_name = get_table()
+class RedisCart:
+    def __init__(self):
+        self.server = redis.Redis(
+            host='localhost',
+            port=6379,
+            db=0,
+            decode_responses=True
+        )
 
-    # отримуємо саму таблицю по її назві
-    table = metadata.tables[table_name]
+        # користувач з яким зараз працюємо
+        self.current_user = None
 
-    # словник: ключ - назва стовпця, значення - те що ввів користувач
-    values = {}
+    def register_user(self, username, password):
+        # перевірка чи зареєстрований юзер
+        if self.server.hexists('users', username):
+            print('Користувач уже зареєстрований')
+            return
 
+        # реєстрація нового юзера
+        self.server.hset(
+            'users',  # назва хеша(словника з логінами\паролями)
+            username,
+            password
+        )
 
-    for column in table.columns:
-        # пропускаємо стовпчик id
-        if column.name == 'id':
-            continue
+    # ■ Вхід у кошик за логіном та паролем;
+    def login(self, username, password):
+        # неправильний username
+        if not self.server.hexists('users', username):
+            print("Невірне ім'я користувача")
+            return
 
-        value = input(f'{column.name} = ')
+        real_password = self.server.hget(
+            "users", username
+        )
 
-        values[column.name] = value
+        if real_password == password:
+            print("Доступ надано")
+            self.current_user = username
+        else:
+            print("Невірний пароль")
 
-    # добавляємо рядок
-    query = insert(table).values(values)
+    # ■ Додати товар у кошик;
+    def add_item(self, item_id, item_count):
+        # carts:username = {
+        #   "item_id": count
+        # }
 
-    try:
-        session.execute(query)
-        session.commit()
-    except Exception as err:
-        print(f"Помилка {err}")
+        # якщо користувач не залогінився
+        if self.current_user is None:
+            print('Потрібно залогінитись')
+            return
 
+        # словник для конкретного користувача
+        key = f"carts:{self.current_user}"
 
-def update_row():
-    # теж саме але без запиту
-    table_name = get_table()
+        if self.server.hexists(key, item_id):
+            old_count = self.server.hget(key, item_id)
+            new_count = old_count + item_count
+            self.server.hset(key, item_id, new_count)
+        else:
+            self.server.hset(key, item_id, item_count)
 
-    # отримуємо саму таблицю по її назві
-    table = metadata.tables[table_name]
-
-    # показати таблицю
-    show_table(table_name)
-
-    id = int(input('Виберіть id рядка: '))
-
-    print('Виберіть назву стовпчика')
-    for column in table.columns:
-        print(f"\t{column.name}")
-
-    column_name = input('Ваша відповідь: ')
-    value = input('Ведіть нове значення: ')
-
-    # запит для зміни рядка
-    query = f"""
-    UPDATE {table_name}
-    SET {column_name} = '{value}'
-    WHERE id = {id}
-    """
-
-    # виконати запит та обробити помилки
-    try:
-        query = text(query)
-        session.execute(query)
-        session.commit()
-    except Exception as err:
-        print(f"Помилка {err}")
+    # ■ Видаляти товар з кошика;
 
 
-def show_table(table_name):
-    table = metadata.tables[table_name]
+    # ■ Змінити товар у кошику;
 
-    query = f"""
-    SELECT *
-    FROM {table_name}
-    """
 
-    query = text(query)
-    rows = session.execute(query)
-    rows = rows.fetchall()
+    # ■ Повне очищення кошика;
 
-    # вивід назв стовпчиків
-    for column in table.columns:
-        print(column.name, end='\t\t')
-    print()
 
-    for row in rows:
-        for value in row:
-            print(value, end='\t\t')
-        print()
+    # ■ Пошук даних у кошику;
 
+
+    # ■ Перегляд вмісту кошика.
+
+# створити об'єкт класу
+cart = RedisCart()
 
 while True:
-    print("1 - вставити рядок в таблицю")
-    print("2 - змінити рядок в таблиці")
+    print('0 -- вихід')
+    print('1 -- реєстрація нового користувача')
+    print('2 -- логін')
 
     command = input('Введіть номер команди: ')
 
-    if command == '1':
-        insert_row2()
+    if command == '0':
+        break
+
+    elif command == '1':
+        username = input("Ведіть ім'я користувача: ")
+        password = input("Ведіть пароль: ")
+        cart.register_user(username, password)
+
     elif command == '2':
-        update_row()
+        username = input("Ведіть ім'я користувача: ")
+        password = input("Ведіть пароль: ")
+        cart.login(username, password)
+
     else:
-        print('невірна команда')
+        print("Невірна команда")
+
+
+# hset users = {
+#   "login": password
+# }
+#
+# users = {
+#     'Anton': '123456',
+#     "Jhon": "asd123",
+#     ....
+# }
