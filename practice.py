@@ -51,6 +51,16 @@ class RedisCart:
         # користувач з яким зараз працюємо
         self.current_user = None
 
+    def _check_current_user(self):
+        if self.current_user is None:
+            print('Потрібно залогінитися')
+            return False
+
+        return True
+
+    def _get_user_cart_key(self):
+        return f"carts:{self.current_user}"
+
     def register_user(self, username, password):
         # перевірка чи зареєстрований юзер
         if self.server.hexists('users', username):
@@ -88,17 +98,17 @@ class RedisCart:
         # }
 
         # якщо користувач не залогінився
-        if self.current_user is None:
-            print('Потрібно залогінитись')
+        if not self._check_current_user():
             return
 
         # словник для конкретного користувача
-        key = f"carts:{self.current_user}"
+        key = self._get_user_cart_key()
 
         if self.server.hexists(key, item_id):
-            old_count = self.server.hget(key, item_id)
-            new_count = old_count + item_count
-            self.server.hset(key, item_id, new_count)
+            # old_count = self.server.hget(key, item_id)
+            # new_count = old_count + item_count
+            # self.server.hset(key, item_id, new_count)
+            self.server.hincrby(key, item_id, item_count)
         else:
             self.server.hset(key, item_id, item_count)
 
@@ -115,6 +125,22 @@ class RedisCart:
 
 
     # ■ Перегляд вмісту кошика.
+    def show_cart(self):
+        if not self._check_current_user():
+            return
+
+        # словник для конкретного користувача
+        key = self._get_user_cart_key()
+
+        # дістаємо увесь словник
+        data = self.server.hgetall(key)
+
+        # вивід на екран
+        for item_id, item_count in data.items():
+            print(f"\t{item_id}\t{item_count}шт")
+
+
+
 
 # створити об'єкт класу
 cart = RedisCart()
@@ -123,6 +149,7 @@ while True:
     print('0 -- вихід')
     print('1 -- реєстрація нового користувача')
     print('2 -- логін')
+    print('3 -- додати товар до кошика')
 
     command = input('Введіть номер команди: ')
 
@@ -138,6 +165,11 @@ while True:
         username = input("Ведіть ім'я користувача: ")
         password = input("Ведіть пароль: ")
         cart.login(username, password)
+
+    elif command == '3':
+        item_id = input("Ведіть id товару: ")
+        count = int(input("Ведіть кількість(шт): "))
+        cart.add_item(item_id, count)
 
     else:
         print("Невірна команда")
