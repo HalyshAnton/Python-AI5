@@ -150,6 +150,7 @@ while True:
     print('1 -- реєстрація нового користувача')
     print('2 -- логін')
     print('3 -- додати товар до кошика')
+    print('4 -- показати кошик')
 
     command = input('Введіть номер команди: ')
 
@@ -170,6 +171,9 @@ while True:
         item_id = input("Ведіть id товару: ")
         count = int(input("Ведіть кількість(шт): "))
         cart.add_item(item_id, count)
+
+    elif command == '4':
+        cart.show_cart()
 
     else:
         print("Невірна команда")
